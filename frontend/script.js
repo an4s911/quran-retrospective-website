@@ -14,13 +14,18 @@ const checkBoxes = document.querySelectorAll(".thing-to-learn > input");
 checkBoxes.forEach((check) => {
     check.addEventListener("change", (changeEvent) => {
         const elem = changeEvent.target;
-        const thingToLearn = elem.parentElement.querySelector("span");
-        if (elem.checked) {
-            thingToLearn.style.color = "gray";
-            thingToLearn.style.textDecoration = "line-through";
-        } else {
-            thingToLearn.style.color = "initial";
-            thingToLearn.style.textDecoration = "initial";
-        }
+        setThingToLearnStatus(elem);
     });
+    setThingToLearnStatus(check);
 });
+
+function setThingToLearnStatus(checkBoxElem) {
+    const thingToLearn = checkBoxElem.parentElement.querySelector("span");
+    if (checkBoxElem.checked) {
+        thingToLearn.style.color = "gray";
+        thingToLearn.style.textDecoration = "line-through";
+    } else {
+        thingToLearn.style.color = "initial";
+        thingToLearn.style.textDecoration = "initial";
+    }
+}
