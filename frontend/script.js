@@ -37,12 +37,12 @@ const data = {
 }
 
 const boxesDiv = document.querySelector('.boxes');
-for (let item in data) {
-    const newBox = makeBoxHtml(item, data[item]);
+for (let date in data) {
+    const newBox = makeBoxHtml(date, data[date]);
     boxesDiv.appendChild(newBox);
 }
 
-function makeBoxHtml(title, otherDetails) {
+function makeBoxHtml(date, otherDetails) {
     // makes a box of the format:
     // <ul class="box">
     //     <li class="day">
@@ -66,7 +66,7 @@ function makeBoxHtml(title, otherDetails) {
     element.classList.add('box')
 
     let html = "";
-    html += `<li class='day'><h4>${title}</h4></li>`;
+    html += `<li class='day'><h4>${date}</h4></li>`;
 
     for (let i = 0; i < otherDetails.length; i++) {
         html += `<li class='thing-to-learn'><input type='checkbox'`;
