@@ -44,3 +44,7 @@ input {
 .thing-to-learn {
     height: 100%;
 }
+
+.thing-to-learn > span {
+    width: 100%;
+}
