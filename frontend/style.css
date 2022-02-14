@@ -7,6 +7,27 @@ ul {
     list-style: none;
 }
 
+header {
+    height: 5rem;
+    box-shadow: 0 0 0.5rem -5px black;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 5px 10px;
+}
+
+header button {
+    border: none;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 0 0.5rem -5px black;
+    border-radius: 1rem;
+    font-size: medium;
+    cursor: pointer;
+}
+
 .boxes {
     padding: 1rem;
     display: flex;
@@ -14,7 +35,7 @@ ul {
     flex-flow: row wrap;
 }
 
-.box {
+ul.box {
     border-radius: 1rem;
     /* background-color: rgb(212, 212, 212); */
     width: 160px;
@@ -26,7 +47,7 @@ ul {
     overflow: hidden;
 }
 
-.box .day {
+ul.box .day {
     background-color: lightgray;
     text-align: center;
 }
@@ -35,10 +56,7 @@ ul.box > li {
     padding: 6px 20px;
     display: flex;
     gap: 5px;
-}
-
-input {
-    width: auto;
+    align-items: center;
 }
 
 .thing-to-learn {
@@ -47,4 +65,5 @@ input {
 
 .thing-to-learn > span {
     width: 100%;
+    height: 100%;
 }

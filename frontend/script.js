@@ -94,7 +94,7 @@ thingsToLearn.forEach((thing) => {
         if (!newValue) {
             return;
         }
-        element.textContent = newValue;
+        element.textContent = newValue.toUpperCase();
     });
 });
 
