@@ -1,42 +1,43 @@
 /* GET DATA AND DISPLAY */
 const data = {
-    'Sun, 13 Feb': [
+    "Sun, 13 Feb": [
         {
-            text: '',
+            text: "4qh2",
             plusStage: -1,
             done: false,
         },
         {
-            text: '4qh2',
+            text: "4qh2",
             plusStage: 0,
             done: false,
         },
         {
-            text: '3qh2',
-            plusStage: -1,
-            done: false,
-        }
-    ],
-    'Mon, 14 Feb': [
-        {
-            text: '',
+            text: "3qh2",
             plusStage: -1,
             done: false,
         },
-        {
-            text: '4qh1',
-            plusStage: 0,
-            done: false
-        },
-        {
-            text: '4qh2',
-            plusStage: 1,
-            done: false
-        }
     ],
-}
 
-const boxesDiv = document.querySelector('.boxes');
+    "Mon, 14 Feb": [
+        {
+            text: "3qh2+1",
+            plusStage: -1,
+            done: false,
+        },
+        {
+            text: "4qh1",
+            plusStage: 0,
+            done: false,
+        },
+        {
+            text: "4qh2",
+            plusStage: 1,
+            done: false,
+        },
+    ],
+};
+
+const boxesDiv = document.querySelector(".boxes");
 for (let date in data) {
     const newBox = makeBoxHtml(date, data[date]);
     boxesDiv.appendChild(newBox);
@@ -60,10 +61,10 @@ function makeBoxHtml(date, otherDetails) {
     //     </li>
     // </ul>
     // otherDetails will be an array (size 3) of objects
-    // where each object has properties text: String, 
+    // where each object has properties text: String,
     // plusStage: Number and done: bool
-    let element = document.createElement('ul');
-    element.classList.add('box')
+    let element = document.createElement("ul");
+    element.classList.add("box");
 
     let html = "";
     html += `<li class='day'><h4>${date}</h4></li>`;
@@ -71,14 +72,14 @@ function makeBoxHtml(date, otherDetails) {
     for (let i = 0; i < otherDetails.length; i++) {
         html += `<li class='thing-to-learn'><input type='checkbox'`;
         if (otherDetails[i].done) {
-            html += ` checked`
+            html += ` checked`;
         }
-        html += `>`
+        html += `>`;
         html += `<span>${otherDetails[i].text.toUpperCase()}`;
         if (otherDetails[i].plusStage >= 0) {
             html += `+${otherDetails[i].plusStage}`;
         }
-        html += '</span></li>'
+        html += "</span></li>";
     }
 
     element.innerHTML = html;
@@ -90,11 +91,15 @@ const thingsToLearn = document.querySelectorAll(".thing-to-learn > span");
 thingsToLearn.forEach((thing) => {
     thing.addEventListener("click", (event) => {
         const element = event.target;
-        const newValue = prompt("New value", element.textContent);
-        if (!newValue) {
-            return;
+
+        if (!Array.from(element.classList).includes("disabled")) {
+            const newValue = prompt("New value", element.textContent);
+
+            if (!newValue) {
+                return;
+            }
+            element.textContent = newValue.toUpperCase();
         }
-        element.textContent = newValue.toUpperCase();
     });
 });
 
@@ -110,10 +115,8 @@ checkBoxes.forEach((check) => {
 function setThingToLearnStatus(checkBoxElem) {
     const thingToLearn = checkBoxElem.parentElement.querySelector("span");
     if (checkBoxElem.checked) {
-        thingToLearn.style.color = "gray";
-        thingToLearn.style.textDecoration = "line-through";
+        thingToLearn.classList.add("disabled");
     } else {
-        thingToLearn.style.color = "initial";
-        thingToLearn.style.textDecoration = "initial";
+        thingToLearn.classList.remove("disabled");
     }
 }
