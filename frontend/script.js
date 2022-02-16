@@ -1,53 +1,50 @@
+const url = "http://localhost:5050/api/getlist";
+
 /* GET DATA AND DISPLAY */
-const data = {
-    "Sun, 13 Feb": [
-        {
-            text: "4qh2",
-            plusStage: -1,
-            done: false,
-        },
-        {
-            text: "4qh2",
-            plusStage: 0,
-            done: false,
-        },
-        {
-            text: "3qh2",
-            plusStage: -1,
-            done: false,
-        },
-    ],
+getData().then((data) => {
+    const boxesDiv = document.querySelector(".boxes");
+    for (let date in data) {
+        const newBox = makeBoxHtml(date, data[date]);
+        boxesDiv.appendChild(newBox);
+    }
 
-    "Mon, 14 Feb": [
-        {
-            text: "3qh2+1",
-            plusStage: -1,
-            done: false,
-        },
-        {
-            text: "4qh1",
-            plusStage: 0,
-            done: false,
-        },
-        {
-            text: "4qh2",
-            plusStage: 1,
-            done: false,
-        },
-    ],
-};
+    const thingsToLearn = document.querySelectorAll(".thing-to-learn > span");
+    thingsToLearn.forEach((thing) => {
+        thing.addEventListener("click", (event) => {
+            const element = event.target;
 
-const boxesDiv = document.querySelector(".boxes");
-for (let date in data) {
-    const newBox = makeBoxHtml(date, data[date]);
-    boxesDiv.appendChild(newBox);
+            if (!Array.from(element.classList).includes("disabled")) {
+                const newValue = prompt("New value", element.textContent);
+
+                if (!newValue) {
+                    return;
+                }
+                element.textContent = newValue.toUpperCase();
+            }
+        });
+    });
+
+    const checkBoxes = document.querySelectorAll(".thing-to-learn > input");
+    checkBoxes.forEach((check) => {
+        check.addEventListener("change", (changeEvent) => {
+            const elem = changeEvent.target;
+            setThingToLearnStatus(elem);
+        });
+        setThingToLearnStatus(check);
+    });
+});
+
+/* FUNCTIONS */
+async function getData() {
+    return await fetch(url, {
+        method: "POST",
+    }).then((blob) => blob.json());
 }
 
 function makeBoxHtml(date, otherDetails) {
     // makes a box of the format:
     // <ul class="box">
     //     <li class="day">
-    //         <!-- Day or Date -->
     //         <h4>Sat, 12 Feb</h4>
     //     </li>
     //     <li class="thing-to-learn"><input type="checkbox" name="revised" id="">
@@ -86,31 +83,6 @@ function makeBoxHtml(date, otherDetails) {
 
     return element;
 }
-
-const thingsToLearn = document.querySelectorAll(".thing-to-learn > span");
-thingsToLearn.forEach((thing) => {
-    thing.addEventListener("click", (event) => {
-        const element = event.target;
-
-        if (!Array.from(element.classList).includes("disabled")) {
-            const newValue = prompt("New value", element.textContent);
-
-            if (!newValue) {
-                return;
-            }
-            element.textContent = newValue.toUpperCase();
-        }
-    });
-});
-
-const checkBoxes = document.querySelectorAll(".thing-to-learn > input");
-checkBoxes.forEach((check) => {
-    check.addEventListener("change", (changeEvent) => {
-        const elem = changeEvent.target;
-        setThingToLearnStatus(elem);
-    });
-    setThingToLearnStatus(check);
-});
 
 function setThingToLearnStatus(checkBoxElem) {
     const thingToLearn = checkBoxElem.parentElement.querySelector("span");
