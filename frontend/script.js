@@ -4,7 +4,7 @@ const url = "http://localhost:5050/api/getlist";
 getData().then((data) => {
     const boxesDiv = document.querySelector(".boxes");
     for (let date in data) {
-        const newBox = makeBoxHtml(date, data[date]);
+        const newBox = makeHtmlBox(formatDate(date), data[date]);
         boxesDiv.appendChild(newBox);
     }
 
@@ -36,12 +36,39 @@ getData().then((data) => {
 
 /* FUNCTIONS */
 async function getData() {
+    // the data will be an object where the key is a data
+    // and the value is an array of 3 objects, each of them have
+    // 3 properties:
+    //      1. key -> 'text', value -> the thing to learn eg; '1qh2'
+    //      2. key -> 'plusStage', value -> an integer default: -1, here -1 means no plusStage
+    //          and other numbers inlucde 0, 1, 3, 7 etc.
+    //      3. key -> 'done', value -> a bool, either true or false
+    // it looks like this:
+    // {
+    //    "2022/02/12": [
+    //        {
+    //            "text": "1hp17",
+    //            "plusStage": 2,
+    //            "done": False,
+    //        },
+    //        {
+    //            "text": "3qh2",
+    //            "plusStage": -1,
+    //            "done": True,
+    //        },
+    //        {
+    //            "text": "1qh2",
+    //            "plusStage": -1,
+    //            "done": False,
+    //        },
+    //    ], ...
+    // }
     return await fetch(url, {
         method: "POST",
     }).then((blob) => blob.json());
 }
 
-function makeBoxHtml(date, otherDetails) {
+function makeHtmlBox(date, otherDetails) {
     // makes a box of the format:
     // <ul class="box">
     //     <li class="day">
@@ -91,4 +118,12 @@ function setThingToLearnStatus(checkBoxElem) {
     } else {
         thingToLearn.classList.remove("disabled");
     }
+}
+
+function formatDate(date) {
+    // convert date from format YYYY/MM/DD to ddd, MMM DD
+    // where: Y -> year, M -> month, D -> Day of the month, d -> day of the week
+    // eg; from `2022/02/12` to `Sat, Feb 12`
+    let formattedDate = new Date(date).toDateString();
+    return formattedDate.slice(0, 3) + "," + formattedDate.slice(3, -5);
 }
