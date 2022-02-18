@@ -127,3 +127,32 @@ function formatDate(date) {
     let formattedDate = new Date(date).toDateString();
     return formattedDate.slice(0, 3) + "," + formattedDate.slice(3, -5);
 }
+
+function deepEqualObjects(v1, v2) {
+    if (v1 === v2) return true;
+
+    if (
+        v1 == null ||
+        v2 == null ||
+        typeof v1 != "object" ||
+        typeof v2 != "object"
+    ) {
+        return false;
+    }
+
+    let v1keys = Object.keys(v1);
+    let v2keys = Object.keys(v2);
+
+    if (v1keys.length != v2keys.length) {
+        return false;
+    }
+
+    let i = 3;
+    for (let key of v1keys) {
+        if (!v2keys.includes(key) || !deepEqualObjects(v1[key], v2[key])) {
+            return false;
+        }
+    }
+
+    return true;
+}
