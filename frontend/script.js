@@ -1,10 +1,10 @@
-const url = "http://localhost:5050/api/getlist";
+const url = "http://localhost:5050";
 
 /* GET DATA AND DISPLAY */
-getData().then((data) => {
+getRemoteData().then((data) => {
     const boxesDiv = document.querySelector(".boxes");
     for (let date in data) {
-        const newBox = makeHtmlBox(formatDate(date), data[date]);
+        const newBox = makeHtmlBox(importFormatDate(date), data[date]);
         boxesDiv.appendChild(newBox);
     }
 
@@ -32,10 +32,31 @@ getData().then((data) => {
         });
         setThingToLearnStatus(check);
     });
+
+    const updateBtn = document.querySelector("#update-btn");
+    updateBtn.addEventListener("click", () => {
+        siteData = parseSiteData();
+        if (!deepEqualObjects(data, siteData)) {
+            updateRemoteData(siteData).then((response) => {
+                if (response.success) {
+                    data = siteData;
+                    alert("Successfully updated");
+                } else {
+                    alert("Something's wrong, your changes aren't applied");
+                }
+            });
+        } else {
+            alert("No changes!");
+        }
+    });
 });
 
+/* PARSE DATA FROM SITE AND UPDATE DATABASE */
+
+// const parsedData = parseSiteData();
+
 /* FUNCTIONS */
-async function getData() {
+async function getRemoteData(remoteUrl = `${url}/api/getlist`) {
     // the data will be an object where the key is a data
     // and the value is an array of 3 objects, each of them have
     // 3 properties:
@@ -63,7 +84,7 @@ async function getData() {
     //        },
     //    ], ...
     // }
-    return await fetch(url, {
+    return await fetch(remoteUrl, {
         method: "POST",
     }).then((blob) => blob.json());
 }
@@ -120,12 +141,64 @@ function setThingToLearnStatus(checkBoxElem) {
     }
 }
 
-function formatDate(date) {
+function importFormatDate(date) {
     // convert date from format YYYY/MM/DD to ddd, MMM DD
     // where: Y -> year, M -> month, D -> Day of the month, d -> day of the week
     // eg; from `2022/02/12` to `Sat, Feb 12`
     let formattedDate = new Date(date).toDateString();
     return formattedDate.slice(0, 3) + "," + formattedDate.slice(3, -5);
+}
+
+async function updateRemoteData(
+    newData = parseSiteData(),
+    remoteUrl = `${url}/api/updatedata`
+) {
+    return await fetch(remoteUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newData),
+    }).then((blob) => blob.json());
+}
+
+function parseSiteData() {
+    // Convert the user's input into an object format as specified
+    // in the comment to the getData() function
+    const data = {};
+    const boxes = document.querySelectorAll("ul.box");
+    boxes.forEach((box) => {
+        const date = exportFormatDate(
+            box.querySelector(".day > h4").textContent
+        );
+        const currThingsToLearn = [];
+        Array.from(box.childNodes)
+            .slice(1, 4)
+            .forEach((thingToLearn) => {
+                let [text, plusStage] = thingToLearn.textContent.split("+");
+                if (!plusStage) {
+                    plusStage = -1;
+                }
+                const done = thingToLearn.querySelector("input").checked;
+                const thingToLearnObj = { text, plusStage: +plusStage, done };
+                currThingsToLearn.push(thingToLearnObj);
+            });
+        data[date] = currThingsToLearn;
+    });
+
+    return data;
+}
+
+function exportFormatDate(date) {
+    // the opposite of above function
+    // convert from 'Sat, Feb 12' to '2022/02/12'
+    const year = new Date().getFullYear();
+    let formattedDate = new Date(`${date} ${year}`).toLocaleDateString();
+    formattedDate = formattedDate.split("/").reverse();
+    [formattedDate[1], formattedDate[2]] = [formattedDate[2], formattedDate[1]];
+    formattedDate = formattedDate.join("/");
+
+    return formattedDate;
 }
 
 function deepEqualObjects(v1, v2) {
