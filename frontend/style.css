@@ -18,6 +18,11 @@ header {
     padding: 5px 10px;
 }
 
+header ul {
+    display: flex;
+    gap: 1rem;
+}
+
 header button {
     border: none;
     padding: 1rem;
@@ -26,6 +31,10 @@ header button {
     border-radius: 1rem;
     font-size: medium;
     cursor: pointer;
+}
+
+header button:hover {
+    background-color: rgb(212, 212, 212);
 }
 
 .boxes {

@@ -108,28 +108,44 @@ function makeHtmlBox(date, otherDetails) {
     // otherDetails will be an array (size 3) of objects
     // where each object has properties text: String,
     // plusStage: Number and done: bool
-    let element = document.createElement("ul");
-    element.classList.add("box");
+    let elementUl = document.createElement("ul");
+    elementUl.classList.add("box");
 
-    let html = "";
-    html += `<li class='day'><h4>${date}</h4></li>`;
+    const boxHeaderLi = document.createElement("li");
+    boxHeaderLi.classList.add("day");
+
+    const boxHeaderH4 = document.createElement("h4");
+    boxHeaderH4.textContent = date;
+
+    boxHeaderLi.appendChild(boxHeaderH4);
+    elementUl.appendChild(boxHeaderLi);
 
     for (let i = 0; i < otherDetails.length; i++) {
-        html += `<li class='thing-to-learn'><input type='checkbox'`;
+        const thingToLearnLi = document.createElement("li");
+        thingToLearnLi.classList.add("thing-to-learn");
+
+        const thingToLearnCheckboxInput = document.createElement("input");
+        thingToLearnCheckboxInput.type = "checkbox";
+
         if (otherDetails[i].done) {
-            html += ` checked`;
+            thingToLearnCheckboxInput.checked = true;
         }
-        html += `>`;
-        html += `<span>${otherDetails[i].text.toUpperCase()}`;
+
+        const thingToLearnSpan = document.createElement("span");
+        thingToLearnSpan.textContent = otherDetails[i].text.toUpperCase();
+
+        thingToLearnLi.appendChild(thingToLearnCheckboxInput);
+
         if (otherDetails[i].plusStage >= 0) {
-            html += `+${otherDetails[i].plusStage}`;
+            thingToLearnSpan.textContent += `+${otherDetails[i].plusStage}`;
         }
-        html += "</span></li>";
+
+        thingToLearnLi.appendChild(thingToLearnSpan);
+
+        elementUl.appendChild(thingToLearnLi);
     }
 
-    element.innerHTML = html;
-
-    return element;
+    return elementUl;
 }
 
 function setThingToLearnStatus(checkBoxElem) {
