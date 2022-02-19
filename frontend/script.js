@@ -212,6 +212,7 @@ async function updateRemoteData(
     newData = parseSiteData(),
     remoteUrl = `${url}/api/updatedata`
 ) {
+    newData["secret_key"] = prompt("Secret Key:");
     return await fetch(remoteUrl, {
         method: "POST",
         headers: {

@@ -1,14 +1,18 @@
 #!.venv/bin/python
 
 import random
+import os
 
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from dotenv import load_dotenv
 app = Flask(__name__)
 # So it supports Cross-origin stuff in javascript.
 # If this isn't here, then there is an error when using localhost
 CORS(app)
+
+load_dotenv()
 
 date = datetime(year=2022, month=2, day=13)
 data = {}
@@ -56,10 +60,16 @@ def getlist():
 def updateData():
     global data
     try:
-        data = request.json
-        return jsonify(success=True), 200
+        temp_data = request.json
     except Exception:
         return jsonify(success=False), 400
+    else:
+        secret_key = temp_data.pop('secret_key')
+        if secret_key == os.getenv('SECRET_KEY'):
+            data = temp_data
+            return jsonify(success=True), 200
+        else:
+            return jsonify(success=False), 403
 
 
 if __name__ == '__main__':
