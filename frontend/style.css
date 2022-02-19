@@ -37,6 +37,23 @@ header button:hover {
     background-color: rgb(212, 212, 212);
 }
 
+header #new-box {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 0 0.5rem -5px black;
+    padding: 1rem;
+    right: 1rem;
+    top: 5.5rem;
+    width: 13rem;
+}
+
+header #new-box input {
+    display: block;
+    width: 100%;
+    margin: 5px;
+}
+
 .boxes {
     padding: 1rem;
     display: flex;

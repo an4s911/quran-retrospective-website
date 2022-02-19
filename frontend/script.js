@@ -8,47 +8,7 @@ getRemoteData().then((data) => {
         boxesDiv.appendChild(newBox);
     }
 
-    const thingsToLearn = document.querySelectorAll(".thing-to-learn > span");
-    thingsToLearn.forEach((thing) => {
-        thing.addEventListener("click", (event) => {
-            const element = event.target;
-
-            if (!Array.from(element.classList).includes("disabled")) {
-                const newValue = prompt("New value", element.textContent);
-
-                if (!newValue) {
-                    return;
-                }
-                element.textContent = newValue.toUpperCase();
-            }
-        });
-    });
-
-    const checkBoxes = document.querySelectorAll(".thing-to-learn > input");
-    checkBoxes.forEach((check) => {
-        check.addEventListener("change", (changeEvent) => {
-            const elem = changeEvent.target;
-            setThingToLearnStatus(elem);
-        });
-        setThingToLearnStatus(check);
-    });
-
-    const updateBtn = document.querySelector("#update-btn");
-    updateBtn.addEventListener("click", () => {
-        siteData = parseSiteData();
-        if (!deepEqualObjects(data, siteData)) {
-            updateRemoteData(siteData).then((response) => {
-                if (response.success) {
-                    data = siteData;
-                    alert("Successfully updated");
-                } else {
-                    alert("Something's wrong, your changes aren't applied");
-                }
-            });
-        } else {
-            alert("No changes!");
-        }
-    });
+    makeEventListeners(data);
 });
 
 /* PARSE DATA FROM SITE AND UPDATE DATABASE */
@@ -89,7 +49,79 @@ async function getRemoteData(remoteUrl = `${url}/api/getlist`) {
     }).then((blob) => blob.json());
 }
 
-function makeHtmlBox(date, otherDetails) {
+function makeEventListeners(data) {
+    const boxesDiv = document.querySelector(".boxes");
+
+    const thingsToLearn = document.querySelectorAll(".thing-to-learn > span");
+    thingsToLearn.forEach((thing) => {
+        thing.onclick = (event) => {
+            const element = event.target;
+
+            if (!Array.from(element.classList).includes("disabled")) {
+                const newValue = prompt("New value", element.textContent);
+
+                if (!newValue) {
+                    return;
+                }
+                element.textContent = newValue.toUpperCase();
+            }
+        };
+    });
+
+    const checkBoxes = document.querySelectorAll(".thing-to-learn > input");
+    checkBoxes.forEach((check) => {
+        check.onchange = (changeEvent) => {
+            const elem = changeEvent.target;
+            setThingToLearnStatus(elem);
+        };
+        setThingToLearnStatus(check);
+    });
+
+    const updateBtn = document.querySelector("#update-btn");
+    updateBtn.onclick = () => {
+        siteData = parseSiteData();
+        if (!deepEqualObjects(data, siteData)) {
+            updateRemoteData(siteData).then((response) => {
+                if (response.success) {
+                    data = siteData;
+                    alert("Successfully updated");
+                } else {
+                    alert("Something's wrong, your changes aren't applied");
+                }
+            });
+        } else {
+            alert("No changes!");
+        }
+    };
+
+    const newBtn = document.querySelector("#new-btn");
+    newBtn.onclick = () => {
+        const newBoxFormDiv = document.querySelector("#new-box");
+        newBoxFormDiv.style.display =
+            newBoxFormDiv.style.display === "block" ? "none" : "block";
+        // newBoxFormDivStyle.display =
+        //     newBoxFormDivStyle.display === "none" ? "" : "none";
+    };
+
+    const newBox = document.querySelector("#new-box");
+    const newBoxAddBtn = newBox.querySelector("input[type=submit]");
+    newBoxAddBtn.onclick = () => {
+        const dateInputElem = newBox.querySelector("input[type=date]");
+        const localData = parseSiteData();
+        const date = dateInputElem.value
+            .replaceAll("-", "/")
+            .replaceAll("/0", "/");
+        if (date in localData) {
+            alert("Sorry, that date already exists");
+        } else {
+            boxesDiv.appendChild(makeHtmlBox(importFormatDate(date)));
+            makeEventListeners(data);
+        }
+        console.log(data);
+    };
+}
+
+function makeHtmlBox(date, otherDetails = null) {
     // makes a box of the format:
     // <ul class="box">
     //     <li class="day">
@@ -108,6 +140,17 @@ function makeHtmlBox(date, otherDetails) {
     // otherDetails will be an array (size 3) of objects
     // where each object has properties text: String,
     // plusStage: Number and done: bool
+    if (!otherDetails) {
+        otherDetails = [];
+        for (let i = 0; i < 3; i++) {
+            otherDetails[i] = {
+                text: "",
+                plusStage: -1,
+                done: false,
+            };
+        }
+    }
+
     let elementUl = document.createElement("ul");
     elementUl.classList.add("box");
 
@@ -120,7 +163,7 @@ function makeHtmlBox(date, otherDetails) {
     boxHeaderLi.appendChild(boxHeaderH4);
     elementUl.appendChild(boxHeaderLi);
 
-    for (let i = 0; i < otherDetails.length; i++) {
+    for (let i = 0; i < 3; i++) {
         const thingToLearnLi = document.createElement("li");
         thingToLearnLi.classList.add("thing-to-learn");
 
@@ -206,7 +249,7 @@ function parseSiteData() {
 }
 
 function exportFormatDate(date) {
-    // the opposite of above function
+    // the opposite of importFormatDate function
     // convert from 'Sat, Feb 12' to '2022/02/12'
     const year = new Date().getFullYear();
     let formattedDate = new Date(`${date} ${year}`).toLocaleDateString();
