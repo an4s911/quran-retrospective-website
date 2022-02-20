@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+rm data.json -i
+heroku ps:copy data.json
+git push heroku main
