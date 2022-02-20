@@ -117,7 +117,6 @@ function makeEventListeners(data) {
             boxesDiv.appendChild(makeHtmlBox(importFormatDate(date)));
             makeEventListeners(data);
         }
-        console.log(data);
     };
 }
 
