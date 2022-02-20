@@ -2,4 +2,7 @@
 
 rm data.json -i
 heroku ps:copy data.json
+
+git add .
+git commit -m "$(date)"
 git push heroku main
