@@ -1,0 +1,100 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+header {
+    height: 5rem;
+    box-shadow: 0 0 0.5rem -5px black;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 5px 10px;
+}
+
+header ul {
+    display: flex;
+    gap: 1rem;
+}
+
+header button {
+    border: none;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 0 0.5rem -5px black;
+    border-radius: 1rem;
+    font-size: medium;
+    cursor: pointer;
+}
+
+header button:hover {
+    background-color: rgb(212, 212, 212);
+}
+
+header #new-box {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 0 0.5rem -5px black;
+    padding: 1rem;
+    right: 1rem;
+    top: 5.5rem;
+    width: 13rem;
+}
+
+header #new-box input {
+    display: block;
+    width: 100%;
+    margin: 5px;
+}
+
+.boxes {
+    padding: 1rem;
+    display: flex;
+    gap: 2rem;
+    flex-flow: row wrap;
+}
+
+ul.box {
+    border-radius: 1rem;
+    /* background-color: rgb(212, 212, 212); */
+    width: 160px;
+    box-shadow: 0 0 0.5rem -5px black;
+
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    overflow: hidden;
+}
+
+ul.box .day {
+    background-color: lightgray;
+    text-align: center;
+}
+
+ul.box > li {
+    padding: 6px 20px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.thing-to-learn {
+    height: 100%;
+}
+
+.thing-to-learn > span {
+    width: 100%;
+    height: 100%;
+}
+
+.thing-to-learn .disabled {
+    color: gray;
+    text-decoration: line-through;
+}
