@@ -1,4 +1,4 @@
-const url = "http://localhost:5050";
+const url = "https://quran-retrospective-website.herokuapp.com";
 
 /* GET DATA AND DISPLAY */
 getRemoteData().then((data) => {
